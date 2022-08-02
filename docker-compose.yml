@@ -1,0 +1,32 @@
+# For more information: https://laravel.com/docs/sail
+version: '3.9'
+services:
+    app:
+        image: webdevops/php-nginx-dev:8.1
+        environment:
+            - WEB_DOCUMENT_ROOT=/app
+        working_dir: /app
+        volumes:
+            -   ./:/app
+        ports:
+            - "127.0.0.1:8123:80"
+        networks:
+            - backend
+    db:
+        image: postgres:14-alpine3.16
+        environment:
+            POSTGRES_PASSWORD: secret
+            POSTGRES_USER: hexlet-tech
+            POSTGRES_DB: hexlet-tech
+        volumes:
+            - db-data:/var/lib/postgresql
+        ports:
+            - "127.0.0.1:5123:5432"
+        networks:
+            - backend
+
+networks:
+    backend:
+
+volumes:
+    db-data:
