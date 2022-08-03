@@ -4,7 +4,8 @@ services:
     app:
         image: webdevops/php-nginx-dev:8.1
         environment:
-            - WEB_DOCUMENT_ROOT=/app
+            WEB_DOCUMENT_ROOT: /app/public
+#            WEB_DOCUMENT_INDEX: /app/public
         working_dir: /app
         volumes:
             -   ./:/app
