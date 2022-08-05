@@ -2,64 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreBalanceRequest;
-use App\Http\Requests\UpdateBalanceRequest;
 use App\Models\Balance;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class BalanceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function add(Request $request): JsonResponse
     {
-        //
-    }
+        $request->validate([
+            'user_id' => 'required|integer',
+            'count' => 'required|numeric|gt:0',
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreBalanceRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreBalanceRequest $request)
-    {
-        //
-    }
+        $user = User::findOrFail($request->get('user_id'));
+        $balance = Balance::firstOrNew([
+            'user_id' => $user->id,
+        ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Balance  $balance
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Balance $balance)
-    {
-        //
-    }
+        $balance->balance += $request->get('count');
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateBalanceRequest  $request
-     * @param  \App\Models\Balance  $balance
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateBalanceRequest $request, Balance $balance)
-    {
-        //
-    }
+        $balance->save();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Balance  $balance
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Balance $balance)
-    {
-        //
+        return response()->json($balance);
     }
 }
