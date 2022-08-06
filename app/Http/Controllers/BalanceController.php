@@ -49,11 +49,19 @@ class BalanceController extends Controller
         return response()->json($balance);
     }
 
-    public function show(User $user): JsonResponse
+    public function show(User $user, Request $request): JsonResponse
     {
         $balance = Balance::firstOrNew([
             'user_id' => $user->id,
         ]);
+
+        $input = $request->all();
+        if (array_key_exists('currency', $input)) {
+            $currency = $input['currency'];
+            $balanceUser = $input('balance');
+            $result = $this->getAnotherCurrency($currency, $balance);
+            $balance->$balance = $result['info']['rate'];
+        }
 
         return response()->json($balance);
     }
@@ -89,5 +97,37 @@ class BalanceController extends Controller
         $balance2->save();
 
         return response()->json([$balance1, $balance2]);
+    }
+
+    public function getAnotherCurrency(string $currency, int $amount)
+    {
+        // qB4opHmB1Rx1cmAiYY6jPlsYiN3UK71g
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.apilayer.com/exchangerates_data/convert?to={$currency}&from=rub&amount={$amount}",
+            CURLOPT_HTTPHEADER => array(
+                "Content-Type: text/plain",
+                "apikey: qB4opHmB1Rx1cmAiYY6jPlsYiN3UK71g"
+            ),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET"
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        if (!$response) {
+            return [
+                "result" => $amount,
+                'query' => ["from" => $currency],
+                'message' => 'сервис конвертации не доступен'
+            ];
+        }
+        return $response;
     }
 }
