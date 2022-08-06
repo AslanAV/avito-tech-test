@@ -73,9 +73,8 @@ class BalanceController extends Controller
         $balance1->balance -= $count;
 
         if ($balance1->balance < 0) {
-            $balance1->balance += $count;
             return response()->json([
-                'message' => __('Insufficient funds.'),
+                'message' => __('Insufficient funds from user1'),
             ], 400);
         }
 
