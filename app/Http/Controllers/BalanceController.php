@@ -101,14 +101,14 @@ class BalanceController extends Controller
 
     public function getAnotherCurrency(string $currency, int $amount)
     {
-        // qB4opHmB1Rx1cmAiYY6jPlsYiN3UK71g
+        $apikey = env('API_TOKEN_APILAYER', false);
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://api.apilayer.com/exchangerates_data/convert?to={$currency}&from=rub&amount={$amount}",
             CURLOPT_HTTPHEADER => array(
                 "Content-Type: text/plain",
-                "apikey: qB4opHmB1Rx1cmAiYY6jPlsYiN3UK71g"
+                "apikey: {$apikey}"
             ),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
