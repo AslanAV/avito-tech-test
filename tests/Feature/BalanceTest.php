@@ -173,6 +173,10 @@ class BalanceTest extends TestCase
                 'user_id' => $this->user2->id,
                 'balance' => $this->user2Balance->balance - $count,
             ]);
+            $this->assertDatabaseHas('balances', [
+                'user_id' => $this->user1->id,
+                'balance' => $count,
+            ]);
         }
     }
 }
