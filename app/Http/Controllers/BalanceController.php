@@ -99,7 +99,7 @@ class BalanceController extends Controller
         return response()->json([$balance1, $balance2]);
     }
 
-    public function getAnotherCurrency(string $currency, int $amount)
+    public function getAnotherCurrency(string $currency, int $amount): bool|array|string
     {
         $apikey = env('API_TOKEN_APILAYER', false);
         $curl = curl_init();
@@ -130,4 +130,6 @@ class BalanceController extends Controller
         }
         return $response;
     }
+
+
 }

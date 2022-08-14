@@ -156,7 +156,7 @@ class BalanceTest extends TestCase
     /**
      * @dataProvider transactionProvider
      */
-    public function testMoneyTransactionFromUser1ToUser2($count, $statusCode): void
+    public function testMoneyTransactionFromUser2ToUser1($count, $statusCode): void
     {
         $route = route('balance.transaction', [$this->user2, $this->user1]);
 
